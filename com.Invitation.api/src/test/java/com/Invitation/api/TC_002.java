@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import io.restassured.RestAssured;
+import io.restassured.authentication.PreemptiveBasicAuthScheme;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -11,10 +12,14 @@ public class TC_002 {
 	@Test
 	public void updateInvite(){
 		RestAssured.baseURI = "http://authenticate.testapp.com:5030/Service";
+		
+		String id = "12345abcde";
+		PreemptiveBasicAuthScheme aut = new PreemptiveBasicAuthScheme();
+		aut.setUserName(id);
 		String requestBody = "<AuthenticationRequestData>\r\n" + "<applicationId>123</applicationId>\r\n" + "<applicationPassword>Test123</applicationPassword>\r\n" +
 		                     "<clientIP>127.0.0.1</clientIP>\r\n" + "</AuthenticationRequestData>";
 		
-		String id = "12345abcde";
+		
 		
 		Response response = null;
 		response =  RestAssured.given().
@@ -43,10 +48,12 @@ public class TC_002 {
 				    .contentType(ContentType.XML)
 				    .body(requestBody1)
 				    .when()
-				    .put("/{ID}");
+				    .put("/update/{ID}");
 		
 		int statusCode = response1.getStatusCode();
 		Assert.assertEquals(statusCode, 200);
+		
+		
 				
 	}
 	
